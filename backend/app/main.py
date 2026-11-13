@@ -8,6 +8,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.bootstrap import bootstrap_contracts
 from app.config import settings
 from app.routers import ROUTERS
 from app.store import store
@@ -24,6 +25,9 @@ app.add_middleware(
 
 for module in ROUTERS:
     app.include_router(module.router)
+
+# 示例数据里的已发布服务在启动时登记为契约，保证读取入口与契约复用开箱可用。
+bootstrap_contracts()
 
 
 @app.get("/api/health")

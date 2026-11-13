@@ -28,6 +28,29 @@ class EntryPayload(BaseModel):
     remark: str | None = None
 
 
+class BatchActionPayload(BaseModel):
+    """多选批量动作：ids 为记录主键列表，action 为统一动作名。"""
+
+    ids: list[Any] = Field(default_factory=list)
+    action: str = ""
+    remark: str | None = None
+
+
+class BatchResult(BaseModel):
+    """批量动作结果：整组是否成功，以及逐条结论。"""
+
+    ok: bool
+    message: str
+    results: list[dict[str, Any]] = Field(default_factory=list)
+    contract: dict[str, Any] | None = None
+
+
+class ReadPayload(BaseModel):
+    """读取归因数据服务的请求参数。"""
+
+    values: dict[str, Any] = Field(default_factory=dict)
+
+
 
 class MetricEntry(BaseModel):
     """指标定义明细结构。"""

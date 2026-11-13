@@ -12,10 +12,17 @@ export function request(path: string, init?: RequestInit): Promise<Response> {
   })
 }
 
-export async function fetchJson<T>(path: string): Promise<T> {
-  const response = await request(path)
+export async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await request(path, init)
   if (!response.ok) {
-    throw new Error(`接口返回 ${response.status}，数据未更新`)
+    let detail = ''
+    try {
+      const payload = (await response.json()) as { detail?: string; message?: string }
+      detail = payload.detail ?? payload.message ?? ''
+    } catch {
+      detail = ''
+    }
+    throw new Error(detail || `接口返回 ${response.status}，数据未更新`)
   }
   return (await response.json()) as T
 }
